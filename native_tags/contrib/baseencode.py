@@ -13,7 +13,7 @@ Syntax::
     
     {%% %s [string] [options] %%}
     """ % codec
-    return filter(function(inner))
+    return list(filter(function(inner)))
 
 enc,dec = '1','31'
 b16encode = codectag(16)

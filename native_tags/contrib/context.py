@@ -8,7 +8,7 @@ def document(o):
         return o.__doc__ or ''
     except AttributeError:
         return ''
-document = filter(function(document))
+document = list(filter(function(document)))
 
 def do_set(context, **kwargs):
     'Updates the context with the keyword arguments'

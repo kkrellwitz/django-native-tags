@@ -1,4 +1,5 @@
 from native_tags.decorators import function
+from functools import reduce
 
 def get_func(func_name, op=True):
     import operator
@@ -44,7 +45,7 @@ def do_map(func_name, *sequence):
 
     if len(sequence)==1:
         sequence = sequence[0]
-    return map(get_func(func_name, False), sequence)
+    return list(map(get_func(func_name, False), sequence))
 do_map = function(do_map, name='map')
 do_map.test = {'args':('ord','wtf'),'result':[119, 116, 102]}
 

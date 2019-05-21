@@ -61,10 +61,10 @@ class TemplateTests(TestCase):
     
     def test_subset(self):
         t = "{% if_subset l1 l2 %}yup{% endif_subset %}"
-        self.assertEqual(render(t, {'l1':[2,3], 'l2':range(5)}), 'yup')
+        self.assertEqual(render(t, {'l1':[2,3], 'l2':list(range(5))}), 'yup')
     
     def test_superset(self):
-        self.assertEqual(render("{% if_superset l1 l2 %}yup{% endif_superset %}",{'l1':range(5),'l2':[2,3]}),'yup')
+        self.assertEqual(render("{% if_superset l1 l2 %}yup{% endif_superset %}",{'l1':list(range(5)),'l2':[2,3]}),'yup')
     
     def test_endswith(self):
         self.assertEqual(render("{% if_endswith 'python' 'n' %}yup{% endif_endswith %}"), 'yup')
@@ -127,7 +127,7 @@ class TemplateTests(TestCase):
     
     def test_search(self):
         t = "{% search '^(\d{3})$' 800 as match %}{{ match.groups|safe }}"
-        self.assertEqual(render(t), u"('800',)")
+        self.assertEqual(render(t), "('800',)")
     
     def test_substitute(self):
         t = "{% substitute 'ROAD$' 'RD.' '100 NORTH MAIN ROAD' %}"
@@ -142,25 +142,25 @@ class TemplateTests(TestCase):
         self.assertEqual(render(t), '333')
     
     def test_calendar_month(self):
-        self.assert_(render('{% calendar month 2009 10 %}').startswith('<table'))
+        self.assertTrue(render('{% calendar month 2009 10 %}').startswith('<table'))
     
     def test_calendar_year(self):
-        self.assert_(render('{% calendar year 2009 %}').startswith('<table'))
+        self.assertTrue(render('{% calendar year 2009 %}').startswith('<table'))
     
     def test_calendar_yearpage(self):
-        self.assert_(render('{% calendar yearpage 2009 %}').startswith('<?xml version="1.0" encoding="ascii"?>'))
+        self.assertTrue(render('{% calendar yearpage 2009 %}').startswith('<?xml version="1.0" encoding="ascii"?>'))
     
     def test_randrange(self):
-        self.assert_(render('{% randrange 10 %}') in map(str,range(10)))
+        self.assertTrue(render('{% randrange 10 %}') in list(map(str,list(range(10)))))
     
     def test_randint(self):
-        self.assert_(0 <= int(render('{% randint 0 10 %}')) <= 10)
+        self.assertTrue(0 <= int(render('{% randint 0 10 %}')) <= 10)
     
     def test_randchoice(self):
-        self.assert_(render('{% randchoice 1 2 3 %}') in '123')
+        self.assertTrue(render('{% randchoice 1 2 3 %}') in '123')
     
     def test_random(self):
-        self.assert_(0. <= float(render('{% random %}')) < 1.)
+        self.assertTrue(0. <= float(render('{% random %}')) < 1.)
     
     def test_loops_work(self):
         """
@@ -194,9 +194,9 @@ class TemplateTests(TestCase):
         self.assertEqual(render('{% if_cmp_kwargs foo=bar %}yup{% endif_cmp_kwargs %}'), 'yup')
     
     def test_zremove_tag(self):
-        self.assert_('add' in register['function'])
+        self.assertTrue('add' in register['function'])
         register.unregister('function', 'add')
-        self.assert_(not 'add' in register['function'])
+        self.assertTrue(not 'add' in register['function'])
        
     def test_inclusion(self):
         self.assertEqual(render('{% myinc cheese %}'), 'im just here for the cheese')
@@ -226,9 +226,9 @@ class TemplateTests(TestCase):
         
     def test_cache(self):
         k = get_cache_key('function', 'date', (), {})
-        self.assert_(cache.get(k) is None)
+        self.assertTrue(cache.get(k) is None)
         self.assertEqual(render('{% date %}'), render('{% date %}'))
-        self.assert_(isinstance(cache.get(k), datetime.datetime))
+        self.assertTrue(isinstance(cache.get(k), datetime.datetime))
     
     def test_split(self):
         from native_tags.nodes import split
@@ -253,7 +253,7 @@ class TemplateTests(TestCase):
         import pygments
         def test_highlight_style(self):
             t = '<style>{% highlight_style style=native cssclass=srcdiv %}</style>'
-            self.assert_(render(t).startswith('<style>.srcdiv .hll { background-color: #404040 }'))
+            self.assertTrue(render(t).startswith('<style>.srcdiv .hll { background-color: #404040 }'))
     
         def test_highlight(self):
             t = '{% highlight src python cssclass=srcdiv %}'

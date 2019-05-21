@@ -5,7 +5,8 @@ from django.template import add_to_builtins
 from django.utils.importlib import import_module
 from django.utils.importlib import import_module
 
-import settings
+from . import settings
+from functools import reduce
 
 
 class AlreadyRegistered(Exception):
@@ -22,7 +23,7 @@ class Library(dict):
     """
     def __init__(self):
         super(Library, self).__init__([(tag, {}) for tag in settings.TAG_TYPES])
-        self.update([i for i in settings.LIBRARY.items() if i[0] in settings.TAG_TYPES])
+        self.update([i for i in list(settings.LIBRARY.items()) if i[0] in settings.TAG_TYPES])
 
         
         # Comb through installed apps w/ templatetags looking for native tags
@@ -31,7 +32,7 @@ class Library(dict):
                 continue
             try:
                 mod = import_module('.templatetags', app)
-            except ImportError, e:
+            except ImportError as e:
                 continue
         
             # TODO: Make this hurt less
@@ -40,13 +41,13 @@ class Library(dict):
                     n = f.split('.py')[0]
                     e = self.load_module('%s.templatetags.%s' % (app, n))
                     if e is not None:# and settings.DEBUG:
-                        print >>stderr, 'Warning: Failed to load module "%s.templatetags.%s": %s' % (app, n, e)
+                        print('Warning: Failed to load module "%s.templatetags.%s": %s' % (app, n, e), file=stderr)
         
         # Load up the native contrib tags
         for tag_module in settings.TAGS:
             e = self.load_module(tag_module)
             if e is not None:# and djsettings.DEBUG:
-                print >>stderr, 'Warning: Failed to load module "%s": %s' % (tag_module, e)
+                print('Warning: Failed to load module "%s": %s' % (tag_module, e), file=stderr)
         
         # Add the BUILTIN_TAGS to Django's builtins
         for mod in settings.BUILTIN_TAGS:
@@ -60,12 +61,12 @@ class Library(dict):
         Load a module string like django.contrib.markup.templatetags.markup into the registry
         Iterates through the module looking for callables w/ attributes matching Native Tags
         """
-        if isinstance(module, basestring) and module.find('.') > -1:
+        if isinstance(module, str) and module.find('.') > -1:
             a = module.split('.')
             module = ('.%s' % a[-1], '.'.join(a[:-1]))
         try:
             module = import_module(*module)
-        except Exception, e:
+        except Exception as e:
             return e
         
         for name in dir(module):
@@ -127,25 +128,25 @@ class Library(dict):
     def get_bucket(self, name):
         "Find out which bucket a given tag name is in"
         for bucket in self:
-            for k,v in self[bucket].items():
+            for k,v in list(self[bucket].items()):
                 if k == name:
                     return bucket
 
     def get(self, name):
         "Get the first tag function matching the given name"
         for bucket in self:
-            for k,v in self[bucket].items():
+            for k,v in list(self[bucket].items()):
                 if k == name:
                     return v
                 
     def tags(self):
         "Iterate over all tags yielding (name, function)"
         for bucket in self:
-            for k,v in self[bucket].items():
+            for k,v in list(self[bucket].items()):
                 yield k,v
     tags = property(tags)
 
     def __len__(self):
-        return reduce(lambda x,y: x+y, map(len, self.values()))
+        return reduce(lambda x,y: x+y, list(map(len, list(self.values()))))
 
 register = Library()

@@ -148,7 +148,7 @@ def indexOf(a, b):
 indexOf = function(indexOf, doc=operator.indexOf.__doc__)
     
 def repeat(a, b):
-    return operator.repeat(a, b)
+    return operator.mul(a, b)
 repeat = function(repeat, doc=operator.repeat.__doc__)
     
 def setitem(a, b, c):

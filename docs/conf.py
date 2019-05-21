@@ -38,8 +38,8 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Django Native Tags'
-copyright = u'2010, Justin Quick <justquick@gmail.com>'
+project = 'Django Native Tags'
+copyright = '2010, Justin Quick <justquick@gmail.com>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -171,8 +171,8 @@ htmlhelp_basename = 'DjangoNativeTagsdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'DjangoNativeTags.tex', u'Django Native Tags Documentation',
-   u'Justin Quick', 'manual'),
+  ('index', 'DjangoNativeTags.tex', 'Django Native Tags Documentation',
+   'Justin Quick', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

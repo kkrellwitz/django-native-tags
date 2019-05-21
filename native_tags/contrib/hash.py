@@ -29,10 +29,10 @@ def hexd(algo, value):
 def hashtag(algo, lib=False):
     def inner(value):
         return hexd(algo, value)
-    return filter(function(inner),
+    return list(filter(function(inner),
         doc='Returns %s hexadecimal hash of the value. %s' % \
             (algo.upper(), lib and 'Requires the :mod:`hashlib` module' or ''),
-        name=algo, test={'args':('wtf',),'result':hexd(algo, 'wtf')})
+        name=algo, test={'args':('wtf',),'result':hexd(algo, 'wtf')}))
     
 md5 = hashtag('md5')
 sha1 = hashtag('sha1')

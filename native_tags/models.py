@@ -1,4 +1,4 @@
-import settings
+from . import settings
 
 if 'native_tags.templatetags.native' in settings.BUILTIN_TAGS:
     from django.template import add_to_builtins

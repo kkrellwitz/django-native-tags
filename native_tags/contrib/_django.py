@@ -62,7 +62,7 @@ def cycle(context, *cyclevars):
     interpreted as literal strings.
     """
 
-    return itertools_cycle(cyclevars).next()
+    return next(itertools_cycle(cyclevars))
 cycle.function = 1
 
 def debug(context):

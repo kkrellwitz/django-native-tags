@@ -11,10 +11,10 @@ if django_version >= (1, 5, 0):
 else:
     from django.utils.hashcompat import sha_constructor
 from django.core.cache import cache
-from registry import register
-from settings import DEFAULT_CACHE_TIMEOUT
+from .registry import register
+from .settings import DEFAULT_CACHE_TIMEOUT
 
-class Constant(unicode):
+class Constant(str):
     """Just a placeholder unicode constant so you can tell
     which variables failed lookup and should be considered constant.
     You can tell by using ``isinstance(var_or_constant, Constant)``"""
@@ -25,7 +25,7 @@ def split(s):
     Split a string into a list, respecting any quoted strings inside
     Uses ``shelx.split`` which has a bad habbit of inserting null bytes where they are not wanted
     """
-    return map(lambda w: filter(lambda c: c != '\x00', w), lexsplit(s))
+    return [[c for c in w if c != '\x00'] for w in lexsplit(s)]
 
 def lookup(parser, var, context, resolve=True, apply_filters=True):
     """
@@ -98,7 +98,7 @@ class NativeNode(template.Node):
         return args
 
     def get_kwargs(self, context, resolve=True, apply_filters=True):
-        d = dict(((k, lookup(self.parser, var, context, resolve)) for k, var in self.kwargs.items() if k != 'varname'))
+        d = dict(((k, lookup(self.parser, var, context, resolve)) for k, var in list(self.kwargs.items()) if k != 'varname'))
         if 'varname' in self.kwargs:
             d['varname'] = self.kwargs['varname']
         return d

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.template import TemplateSyntaxError
 
 from native_tags.decorators import filter
-from _markup import formatter
+from ._markup import formatter
 
 def apply_markup(value, arg=None):
     """
@@ -19,7 +19,7 @@ def apply_markup(value, arg=None):
     if arg is not None:
         return formatter(value, filter_name=arg)
     return formatter(value)
-apply_markup = filter(apply_markup, is_safe=True)
+apply_markup = list(filter(apply_markup, is_safe=True))
 apply_markup.test = {'args':('wtf',),'result':'<p>wtf</p>'}
 
 def smartypants(value):
@@ -39,4 +39,4 @@ def smartypants(value):
         return value
     else:
         return smartyPants(value)
-smartypants = filter(smartypants, is_safe=True)
+smartypants = list(filter(smartypants, is_safe=True))

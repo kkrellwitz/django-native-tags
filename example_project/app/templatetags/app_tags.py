@@ -11,7 +11,7 @@ no_render = function(no_render, resolve=False)
 
 def myfilter(value, arg):
     return value + arg
-myfilter = filter(myfilter, test={'args':(1,1),'result':2})
+myfilter = list(filter(myfilter, test={'args':(1,1),'result':2}))
     
 def adder(x, y):
     return x + y

@@ -19,7 +19,7 @@ def func_factory(method):
     inner.__doc__ = '\n'.join(doc)
     if method.startswith('is'):
         return comparison(inner)
-    return filter(function(inner))
+    return list(filter(function(inner)))
 
 
 acos = func_factory('acos')

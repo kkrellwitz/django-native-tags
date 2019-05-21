@@ -6,11 +6,11 @@ class Command(BaseCommand):
         return '%s [bucket1 ...]\n\nLists registered tags for the given buckets if any' % exe
     
     def handle(self, *buckets, **kwargs):
-        for bucket,items in register.items():
+        for bucket,items in list(register.items()):
             if len(buckets) and not bucket in buckets:
                 continue
-            print bucket.title()
-            items = [(x,y.__module__) for x,y in items.items()]
+            print((bucket.title()))
+            items = [(x,y.__module__) for x,y in list(items.items())]
             items.sort(lambda x,y: cmp(x[1],y[1]))
             for name,mod in items:
-                print '\t%s.%s' % (mod,name)
+                print(('\t%s.%s' % (mod,name)))
